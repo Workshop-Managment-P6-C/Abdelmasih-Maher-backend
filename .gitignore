@@ -1,0 +1,16 @@
+# Secrets & local config (NEVER push these)
+.env
+.env.local
+
+# Dependencies
+node_modules/
+
+# Logs & OS
+npm-debug.log*
+*.log
+.DS_Store
+Thumbs.db
+
+# Backups & zips
+*.bak.zip
+backend-project.zip

@@ -1,0 +1,1495 @@
+openapi: 3.0.0
+info:
+  title: BUA DevHub API Documentation
+  description: Workshop Management & Student Practical Training (WST) — 94 project endpoints + health check
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+    description: Local dev
+tags:
+  - name: Health
+  - name: Auth
+  - name: Users
+  - name: Courses
+  - name: Tasks
+  - name: Assessments
+  - name: Enrollments
+  - name: Attendance
+  - name: Certificates
+  - name: Halls
+  - name: Customers
+  - name: Vehicles
+  - name: Bays
+  - name: JobCards
+  - name: WorkItems
+  - name: Labor
+  - name: BayBookings
+  - name: Parts
+  - name: Stock
+  - name: Purchasing
+  - name: Invoices
+  - name: Sessions
+  - name: Dashboards
+  - name: Exports
+  - name: Predictions
+  - name: Attachments
+  - name: Notifications
+  - name: Students
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              example: UNAUTHORIZED
+            message:
+              type: string
+              example: Access token is missing or invalid
+            requestId:
+              type: string
+              example: req_1716400000000
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        full_name:
+          type: string
+        role:
+          type: string
+          enum: [WORKSHOP_MANAGER, SERVICE_ADVISOR, TECHNICIAN, QUALITY_CHECKER, STOREKEEPER, PROCUREMENT, TRAINING_SUPERVISOR, MENTOR, STUDENT, FINANCE_VIEWER, AUDITOR, CUSTOMER]
+        phone:
+          type: string
+        store_code:
+          type: string
+        student_code:
+          type: string
+        preferred_language:
+          type: string
+        is_active:
+          type: boolean
+    Course:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          example: AI
+        name:
+          type: object
+          example: {en: Artificial Intelligence, ar: الذكاء الاصطناعي}
+        required_sessions:
+          type: integer
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        course_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        competency_code:
+          type: string
+        competency_name:
+          type: object
+    Assessment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        training_session_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        practical_task_id:
+          type: string
+          format: uuid
+        result:
+          type: string
+          enum: [PASS, FAIL, NEEDS_IMPROVEMENT]
+        entered_by:
+          type: string
+          format: uuid
+    Enrollment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        course_id:
+          type: string
+          format: uuid
+        group_code:
+          type: string
+          example: AI-G1
+    Attendance:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        training_session_id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [PRESENT, ABSENT, LATE, EXCUSED]
+        recorded_by:
+          type: string
+          format: uuid
+    Certificate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        student_id:
+          type: string
+          format: uuid
+        course_id:
+          type: string
+          format: uuid
+        token:
+          type: string
+        status:
+          type: string
+    HallBooking:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        hall_id:
+          type: string
+          format: uuid
+        starts_at:
+          type: string
+          format: date-time
+        ends_at:
+          type: string
+          format: date-time
+        source:
+          type: string
+        training_session_id:
+          type: string
+          format: uuid
+    Customer:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        email: {type: string}
+        full_name: {type: string}
+        role: {type: string, example: CUSTOMER}
+        phone: {type: string}
+        contact_preference: {type: string}
+    Vehicle:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        customer_id: {type: string, format: uuid}
+        plate_number: {type: string}
+        vin: {type: string}
+        make: {type: string}
+        model: {type: string}
+        year: {type: integer}
+        current_mileage: {type: integer}
+        next_service_date: {type: string, format: date}
+        next_service_mileage: {type: integer}
+        service_interval_km: {type: integer}
+    Bay:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        name: {type: string, example: Bay 1}
+        kind: {type: string, example: WORKSHOP}
+        is_active: {type: boolean}
+    JobCard:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        job_number: {type: string}
+        vehicle_id: {type: string, format: uuid}
+        service_type: {type: string}
+        priority: {type: string}
+        complaint: {type: string}
+        mileage_in: {type: integer}
+        stage: {type: string, enum: [RECEIVED, IN_PROGRESS, QUALITY_CHECK, READY, DELIVERED]}
+        bay_id: {type: string, format: uuid}
+        technician_id: {type: string, format: uuid}
+        advisor_id: {type: string, format: uuid}
+    WorkItem:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        job_card_id: {type: string, format: uuid}
+        description: {type: string}
+        is_billable: {type: boolean}
+        approval: {type: string, enum: [PENDING, APPROVED, DECLINED]}
+        status: {type: string}
+    LaborEntry:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        job_card_id: {type: string, format: uuid}
+        work_item_id: {type: string, format: uuid}
+        technician_id: {type: string, format: uuid}
+        minutes: {type: integer}
+        note: {type: string}
+    BayBooking:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        bay_id: {type: string, format: uuid}
+        starts_at: {type: string, format: date-time}
+        ends_at: {type: string, format: date-time}
+        source: {type: string, enum: [JOB, SESSION]}
+    Part:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        sku: {type: string}
+        name: {type: object}
+        category: {type: string}
+        unit: {type: string}
+        average_cost: {type: number}
+        min_level: {type: integer}
+        max_level: {type: integer}
+    PurchaseOrder:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        po_number: {type: string}
+        vendor_name: {type: string}
+        status: {type: string}
+        total_amount: {type: number}
+    Invoice:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        invoice_number: {type: string}
+        job_card_id: {type: string, format: uuid}
+        status: {type: string}
+        total_amount: {type: number}
+    TrainingSession:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        course_id: {type: string, format: uuid}
+        group_code: {type: string}
+        hall_id: {type: string, format: uuid}
+        mentor_id: {type: string, format: uuid}
+        starts_at: {type: string, format: date-time}
+        ends_at: {type: string, format: date-time}
+        status: {type: string}
+paths:
+  /api/v1/health:
+    get:
+      tags: [Health]
+      summary: Health check
+      responses:
+        '200':
+          description: Server is running
+  /api/v1/auth/login:
+    post:
+      tags: [Auth]
+      summary: Login with email + password (1/94)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: {type: string, example: supervisor@example.com}
+                password: {type: string, example: password123}
+      responses:
+        '200': {description: accessToken + refreshToken + user}
+        '401': {description: Invalid credentials, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new user (2/94)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [full_name, email, password]
+              properties:
+                full_name: {type: string}
+                email: {type: string}
+                password: {type: string}
+      responses:
+        '201': {description: Created}
+        '400': {description: Validation error, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+        '409': {description: Email conflict, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/auth/me:
+    get:
+      tags: [Auth]
+      summary: Current authenticated user (3/94)
+      security: [{bearerAuth: []}]
+      responses:
+        '200': {description: Current user}
+        '401': {description: Unauthorized, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/users:
+    get:
+      tags: [Users]
+      summary: List all users (4/94)
+      security: [{bearerAuth: []}]
+      responses:
+        '200': {description: User list}
+        '401': {description: Unauthorized, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/users/{id}:
+    get:
+      tags: [Users]
+      summary: Get user by id (5/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: User}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+    put:
+      tags: [Users]
+      summary: Update user (6/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                full_name: {type: string}
+                email: {type: string}
+                role: {type: string, description: Assigned by an authorized manager}
+                phone: {type: string}
+                preferred_language: {type: string}
+                is_active: {type: boolean}
+      responses:
+        '200': {description: Updated user}
+        '403': {description: Only an authorized manager can assign roles}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+    delete:
+      tags: [Users]
+      summary: Deactivate user (soft delete) (7/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Deactivated}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/courses:
+    get:
+      tags: [Courses]
+      summary: List courses (8/94)
+      responses:
+        '200': {description: Course list}
+    post:
+      tags: [Courses]
+      summary: Create course (9/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code: {type: string, example: AI}
+                name: {type: object, example: {en: Artificial Intelligence, ar: الذكاء الاصطناعي}}
+                name_en: {type: string}
+                name_ar: {type: string}
+                required_sessions: {type: integer}
+      responses:
+        '201': {description: Created}
+        '400': {description: Validation error, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/courses/{id}:
+    get:
+      tags: [Courses]
+      summary: Get course by id (10/94)
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Course}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+    put:
+      tags: [Courses]
+      summary: Update course (11/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/Course'}
+      responses:
+        '200': {description: Updated}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+    delete:
+      tags: [Courses]
+      summary: Delete course (12/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Deleted}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/tasks:
+    get:
+      tags: [Tasks]
+      summary: List practical tasks, optional ?course_id= (13/94)
+      parameters:
+        - {name: course_id, in: query, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Task list}
+    post:
+      tags: [Tasks]
+      summary: Create practical task (14/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [course_id, title, competency_code]
+              properties:
+                course_id: {type: string, format: uuid}
+                title: {type: string}
+                description: {type: string}
+                competency_code: {type: string}
+                competency_name: {type: object}
+      responses:
+        '201': {description: Created}
+        '400': {description: Validation error, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/tasks/{id}:
+    get:
+      tags: [Tasks]
+      summary: Get task by id (15/94)
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Task}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+    put:
+      tags: [Tasks]
+      summary: Update task (16/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/Task'}
+      responses:
+        '200': {description: Updated}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+    delete:
+      tags: [Tasks]
+      summary: Delete task (17/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Deleted}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/assessments:
+    get:
+      tags: [Assessments]
+      summary: List assessments, optional ?student_id=&training_session_id= (18/94)
+      parameters:
+        - {name: student_id, in: query, schema: {type: string, format: uuid}}
+        - {name: training_session_id, in: query, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Assessment list}
+    post:
+      tags: [Assessments]
+      summary: Create assessment result (19/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [training_session_id, student_id, practical_task_id, result]
+              properties:
+                training_session_id: {type: string, format: uuid}
+                student_id: {type: string, format: uuid}
+                practical_task_id: {type: string, format: uuid}
+                result: {type: string, enum: [PASS, FAIL, NEEDS_IMPROVEMENT]}
+                time_on_task_minutes: {type: integer}
+                mentor_note: {type: string}
+                entered_by: {type: string, format: uuid, description: defaults to authenticated user}
+      responses:
+        '201': {description: Created}
+        '400': {description: Validation error, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/enrollments:
+    get:
+      tags: [Enrollments]
+      summary: List enrollments, optional ?student_id=&course_id= (20/94)
+      parameters:
+        - {name: student_id, in: query, schema: {type: string, format: uuid}}
+        - {name: course_id, in: query, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Enrollment list}
+    post:
+      tags: [Enrollments]
+      summary: Enroll student (21/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [student_id, course_id, group_code]
+              properties:
+                student_id: {type: string, format: uuid}
+                course_id: {type: string, format: uuid}
+                group_code: {type: string, example: AI-G1}
+      responses:
+        '201': {description: Created}
+        '400': {description: Validation error, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+        '409': {description: Already enrolled, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/enrollments/{id}:
+    delete:
+      tags: [Enrollments]
+      summary: Delete enrollment (22/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Deleted}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/attendance:
+    get:
+      tags: [Attendance]
+      summary: List attendance, optional ?training_session_id=&student_id= (23/94)
+      parameters:
+        - {name: training_session_id, in: query, schema: {type: string, format: uuid}}
+        - {name: student_id, in: query, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Attendance list}
+    post:
+      tags: [Attendance]
+      summary: Record attendance (upsert per session+student) (24/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [training_session_id, student_id, status]
+              properties:
+                training_session_id: {type: string, format: uuid}
+                student_id: {type: string, format: uuid}
+                status: {type: string, enum: [PRESENT, ABSENT, LATE, EXCUSED]}
+                recorded_by: {type: string, format: uuid, description: defaults to authenticated user}
+      responses:
+        '201': {description: Recorded}
+        '400': {description: Validation error, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/certificates/user/{id}:
+    get:
+      tags: [Certificates]
+      summary: Get certificates for a student (25/94)
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}, description: student_id}
+      responses:
+        '200': {description: Certificate list}
+  /api/v1/certificates:
+    post:
+      tags: [Certificates]
+      summary: Issue certificate (26/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [student_id, course_id]
+              properties:
+                student_id: {type: string, format: uuid}
+                course_id: {type: string, format: uuid}
+                token: {type: string, description: auto-generated when omitted}
+      responses:
+        '201': {description: Issued}
+        '400': {description: Validation error, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/halls/bookings:
+    get:
+      tags: [Halls]
+      summary: List hall bookings, optional ?hall_id= (27/94)
+      parameters:
+        - {name: hall_id, in: query, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Booking list}
+    post:
+      tags: [Halls]
+      summary: Create hall booking with overlap guard (28/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [hall_id, starts_at, ends_at]
+              properties:
+                hall_id: {type: string, format: uuid}
+                starts_at: {type: string, format: date-time}
+                ends_at: {type: string, format: date-time}
+                training_session_id: {type: string, format: uuid}
+      responses:
+        '201': {description: Booked}
+        '400': {description: Validation error, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+        '409': {description: Time-slot conflict, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/customers:
+    get:
+      tags: [Customers]
+      summary: List customers (29/94)
+      responses:
+        '200': {description: Customer list}
+    post:
+      tags: [Customers]
+      summary: Create customer (30/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [full_name]
+              properties:
+                full_name: {type: string}
+                email: {type: string}
+                phone: {type: string}
+                contact_preference: {type: string}
+      responses:
+        '201': {description: Created}
+        '409': {description: Email conflict, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/customers/{id}:
+    get:
+      tags: [Customers]
+      summary: Get customer by id (31/94)
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Customer}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+    put:
+      tags: [Customers]
+      summary: Update customer (32/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/Customer'}
+      responses:
+        '200': {description: Updated}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/vehicles:
+    get:
+      tags: [Vehicles]
+      summary: List vehicles, optional ?customer_id= (33/94)
+      parameters:
+        - {name: customer_id, in: query, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Vehicle list}
+    post:
+      tags: [Vehicles]
+      summary: Create vehicle (34/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [customer_id]
+              properties:
+                customer_id: {type: string, format: uuid}
+                plate_number: {type: string}
+                vin: {type: string}
+                make: {type: string}
+                model: {type: string}
+                year: {type: integer}
+                current_mileage: {type: integer}
+      responses:
+        '201': {description: Created}
+  /api/v1/vehicles/{id}:
+    get:
+      tags: [Vehicles]
+      summary: Get vehicle by id (35/94)
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Vehicle}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+    put:
+      tags: [Vehicles]
+      summary: Update vehicle (36/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/Vehicle'}
+      responses:
+        '200': {description: Updated}
+    delete:
+      tags: [Vehicles]
+      summary: Archive vehicle (37/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Archived}
+  /api/v1/bays:
+    get:
+      tags: [Bays]
+      summary: List bays (38/94)
+      responses:
+        '200': {description: Bay list}
+    post:
+      tags: [Bays]
+      summary: Create bay (39/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: {type: string, example: Bay 1}
+                kind: {type: string, example: WORKSHOP}
+      responses:
+        '201': {description: Created}
+  /api/v1/job-cards:
+    get:
+      tags: [JobCards]
+      summary: List job cards, optional ?stage=&technician_id=&bay_id= (40/94)
+      parameters:
+        - {name: stage, in: query, schema: {type: string, enum: [RECEIVED, IN_PROGRESS, QUALITY_CHECK, READY, DELIVERED]}}
+        - {name: technician_id, in: query, schema: {type: string, format: uuid}}
+        - {name: bay_id, in: query, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Job card list}
+    post:
+      tags: [JobCards]
+      summary: Create job card (41/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [vehicle_id]
+              properties:
+                job_number: {type: string}
+                vehicle_id: {type: string, format: uuid}
+                service_type: {type: string}
+                priority: {type: string}
+                complaint: {type: string}
+                mileage_in: {type: integer}
+                bay_id: {type: string, format: uuid}
+                technician_id: {type: string, format: uuid}
+                advisor_id: {type: string, format: uuid}
+                promised_at: {type: string, format: date-time}
+      responses:
+        '201': {description: Created}
+  /api/v1/job-cards/{id}:
+    get:
+      tags: [JobCards]
+      summary: Get job card by id (42/94)
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Job card}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+    put:
+      tags: [JobCards]
+      summary: Update job card (43/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/JobCard'}
+      responses:
+        '200': {description: Updated}
+  /api/v1/job-cards/{id}/stage:
+    patch:
+      tags: [JobCards]
+      summary: Transition stage with audit (44/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [to_stage]
+              properties:
+                to_stage: {type: string, enum: [RECEIVED, IN_PROGRESS, QUALITY_CHECK, READY, DELIVERED]}
+                note: {type: string}
+      responses:
+        '200': {description: Stage updated}
+        '422': {description: Invalid transition, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/job-cards/{id}/stages:
+    get:
+      tags: [JobCards]
+      summary: Stage history / audit trail (45/94)
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Stage history}
+  /api/v1/job-cards/{id}/work-items:
+    get:
+      tags: [WorkItems]
+      summary: List work items of a job (46/94)
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Work item list}
+    post:
+      tags: [WorkItems]
+      summary: Add work item (47/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [description]
+              properties:
+                description: {type: string}
+                is_billable: {type: boolean}
+      responses:
+        '201': {description: Created}
+  /api/v1/work-items/{id}/approve:
+    patch:
+      tags: [WorkItems]
+      summary: Approve / decline work item (48/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [approval]
+              properties:
+                approval: {type: string, enum: [PENDING, APPROVED, DECLINED]}
+      responses:
+        '200': {description: Updated}
+  /api/v1/job-cards/{id}/labor:
+    get:
+      tags: [Labor]
+      summary: List labour entries of a job (49/94)
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Labour list}
+    post:
+      tags: [Labor]
+      summary: Log labour (50/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [minutes]
+              properties:
+                work_item_id: {type: string, format: uuid}
+                technician_id: {type: string, format: uuid}
+                minutes: {type: integer}
+                note: {type: string}
+      responses:
+        '201': {description: Logged}
+  /api/v1/bay-bookings:
+    get:
+      tags: [BayBookings]
+      summary: List bay bookings (51/94)
+      parameters:
+        - {name: bay_id, in: query, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Booking list}
+    post:
+      tags: [BayBookings]
+      summary: Create bay booking with overlap guard (52/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [bay_id, starts_at, ends_at]
+              properties:
+                bay_id: {type: string, format: uuid}
+                starts_at: {type: string, format: date-time}
+                ends_at: {type: string, format: date-time}
+                source: {type: string, enum: [JOB, SESSION]}
+                job_card_id: {type: string, format: uuid}
+      responses:
+        '201': {description: Booked}
+        '409': {description: Time-slot conflict, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/parts:
+    get:
+      tags: [Parts]
+      summary: List parts, optional ?category=&q= (53/94)
+      parameters:
+        - {name: category, in: query, schema: {type: string}}
+        - {name: q, in: query, schema: {type: string}}
+      responses:
+        '200': {description: Parts list}
+    post:
+      tags: [Parts]
+      summary: Create part (54/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sku]
+              properties:
+                sku: {type: string}
+                barcode: {type: string}
+                name: {type: object}
+                name_en: {type: string}
+                name_ar: {type: string}
+                category: {type: string}
+                unit: {type: string}
+                average_cost: {type: number}
+                min_level: {type: integer}
+                max_level: {type: integer}
+      responses:
+        '201': {description: Created}
+  /api/v1/parts/{id}:
+    get:
+      tags: [Parts]
+      summary: Get part by id (55/94)
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Part}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+    put:
+      tags: [Parts]
+      summary: Update part (56/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/Part'}
+      responses:
+        '200': {description: Updated}
+  /api/v1/stock/balances:
+    get:
+      tags: [Stock]
+      summary: On-hand balances per part/store (57/94)
+      parameters:
+        - {name: store_code, in: query, schema: {type: string}}
+      responses:
+        '200': {description: Balances}
+  /api/v1/stock/movements:
+    get:
+      tags: [Stock]
+      summary: Ledger entries, optional ?part_id=&store_code=&job_card_id= (58/94)
+      parameters:
+        - {name: part_id, in: query, schema: {type: string, format: uuid}}
+        - {name: store_code, in: query, schema: {type: string}}
+        - {name: job_card_id, in: query, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Movements}
+    post:
+      tags: [Stock]
+      summary: Record movement with stock guard (59/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [part_id, type, quantity]
+              properties:
+                part_id: {type: string, format: uuid}
+                store_code: {type: string, example: S1}
+                type: {type: string, enum: [RECEIPT, ISSUE, RESERVATION, RELEASE, TRANSFER_OUT, TRANSFER_IN, COUNT_ADJUSTMENT, ADJUSTMENT, REVERSAL]}
+                quantity: {type: integer}
+                unit_cost: {type: number}
+                reason: {type: string}
+                job_card_id: {type: string, format: uuid}
+      responses:
+        '201': {description: Recorded}
+        '422': {description: Insufficient stock, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/stock/reorder-suggestions:
+    get:
+      tags: [Stock]
+      summary: Rule baseline reorder suggestions (60/94)
+      responses:
+        '200': {description: Suggestions with suggested_qty + rule_version}
+  /api/v1/purchase-orders:
+    get:
+      tags: [Purchasing]
+      summary: List purchase orders, optional ?status= (61/94)
+      parameters:
+        - {name: status, in: query, schema: {type: string}}
+      responses:
+        '200': {description: PO list}
+    post:
+      tags: [Purchasing]
+      summary: Create PO with lines, threshold sets approvals_required (62/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [vendor_name, lines]
+              properties:
+                vendor_name: {type: string}
+                vendor_contact_phone: {type: string}
+                vendor_contact_email: {type: string}
+                lines: {type: array, items: {type: object}}
+      responses:
+        '201': {description: Created}
+  /api/v1/purchase-orders/{id}:
+    get:
+      tags: [Purchasing]
+      summary: Get PO with lines (63/94)
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: PO}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/purchase-orders/{id}/submit:
+    post:
+      tags: [Purchasing]
+      summary: Submit draft PO (64/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Submitted}
+  /api/v1/purchase-orders/{id}/approve:
+    post:
+      tags: [Purchasing]
+      summary: Approve (two distinct approvers above threshold) (65/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Approved}
+        '403': {description: Creator cannot approve, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/purchase-orders/{id}/receive:
+    post:
+      tags: [Purchasing]
+      summary: Goods receipt, writes RECEIPT ledger rows (66/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [lines]
+              properties:
+                lines: {type: array, items: {type: object}}
+      responses:
+        '200': {description: Received}
+  /api/v1/invoices:
+    get:
+      tags: [Invoices]
+      summary: List invoices, optional ?job_card_id=&status= (67/94)
+      parameters:
+        - {name: job_card_id, in: query, schema: {type: string, format: uuid}}
+        - {name: status, in: query, schema: {type: string}}
+      responses:
+        '200': {description: Invoice list}
+  /api/v1/invoices/compute:
+    post:
+      tags: [Invoices]
+      summary: Compute draft invoice from uninvoiced labour+parts (68/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [job_card_id]
+              properties:
+                job_card_id: {type: string, format: uuid}
+                hourly_rate: {type: number}
+                discount: {type: number}
+                tax: {type: number}
+      responses:
+        '201': {description: Computed}
+  /api/v1/invoices/{id}:
+    get:
+      tags: [Invoices]
+      summary: Get invoice with lines (69/94)
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Invoice}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/invoices/{id}/status:
+    patch:
+      tags: [Invoices]
+      summary: Set ISSUED/PAID/VOID (70/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status: {type: string, enum: [ISSUED, PAID, VOID]}
+      responses:
+        '200': {description: Updated}
+  /api/v1/halls:
+    get:
+      tags: [Halls]
+      summary: List halls (71/94)
+      responses:
+        '200': {description: Hall list}
+    post:
+      tags: [Halls]
+      summary: Create hall (72/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: {type: string}
+                kind: {type: string}
+      responses:
+        '201': {description: Created}
+  /api/v1/sessions:
+    get:
+      tags: [Sessions]
+      summary: List sessions, optional ?course_id=&group_code=&mentor_id= (73/94)
+      parameters:
+        - {name: course_id, in: query, schema: {type: string, format: uuid}}
+        - {name: group_code, in: query, schema: {type: string}}
+        - {name: mentor_id, in: query, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Session list}
+    post:
+      tags: [Sessions]
+      summary: Schedule session with hall+mentor conflict check (74/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [course_id, group_code, hall_id, mentor_id, starts_at, ends_at]
+              properties:
+                course_id: {type: string, format: uuid}
+                group_code: {type: string}
+                hall_id: {type: string, format: uuid}
+                mentor_id: {type: string, format: uuid}
+                starts_at: {type: string, format: date-time}
+                ends_at: {type: string, format: date-time}
+                capacity: {type: integer}
+      responses:
+        '201': {description: Created}
+        '409': {description: Hall/mentor conflict, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/sessions/{id}:
+    get:
+      tags: [Sessions]
+      summary: Get session by id (75/94)
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Session}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/sessions/{id}/status:
+    patch:
+      tags: [Sessions]
+      summary: Set PLANNED/CONFIRMED/COMPLETED/CANCELLED (76/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status: {type: string}
+      responses:
+        '200': {description: Updated}
+  /api/v1/assessments/{id}/sign:
+    patch:
+      tags: [Assessments]
+      summary: Supervisor sign-off, signer must differ from mentor (77/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                signed_by: {type: string, format: uuid}
+      responses:
+        '200': {description: Signed}
+        '422': {description: Invalid signer, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/certificates/verify/{token}:
+    get:
+      tags: [Certificates]
+      summary: Public certificate verification by token (78/94)
+      parameters:
+        - {name: token, in: path, required: true, schema: {type: string}}
+      responses:
+        '200': {description: Certificate}
+        '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/certificates/{id}/revoke:
+    patch:
+      tags: [Certificates]
+      summary: Revoke certificate (79/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                revoked_reason: {type: string}
+      responses:
+        '200': {description: Revoked}
+  /api/v1/students/{studentId}/competency:
+    get:
+      tags: [Students]
+      summary: Competency coverage, ?course_id= required (80/94)
+      parameters:
+        - {name: studentId, in: path, required: true, schema: {type: string, format: uuid}}
+        - {name: course_id, in: query, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Coverage with complete flag}
+  /api/v1/dashboards/jobs:
+    get:
+      tags: [Dashboards]
+      summary: Jobs by stage, turnaround, bay utilization (81/94)
+      security: [{bearerAuth: []}]
+      responses:
+        '200': {description: Dashboard data}
+  /api/v1/dashboards/stock:
+    get:
+      tags: [Dashboards]
+      summary: Stock balances + below-min list (82/94)
+      security: [{bearerAuth: []}]
+      responses:
+        '200': {description: Dashboard data}
+  /api/v1/dashboards/training:
+    get:
+      tags: [Dashboards]
+      summary: Attendance, assessments, competency coverage (83/94)
+      security: [{bearerAuth: []}]
+      responses:
+        '200': {description: Dashboard data}
+  /api/v1/exports/jobs.csv:
+    get:
+      tags: [Exports]
+      summary: Jobs CSV export (84/94)
+      security: [{bearerAuth: []}]
+      responses:
+        '200': {description: CSV file}
+  /api/v1/exports/stock.csv:
+    get:
+      tags: [Exports]
+      summary: Stock ledger CSV export (85/94)
+      security: [{bearerAuth: []}]
+      responses:
+        '200': {description: CSV file}
+  /api/v1/exports/attendance.csv:
+    get:
+      tags: [Exports]
+      summary: Attendance CSV export (86/94)
+      security: [{bearerAuth: []}]
+      responses:
+        '200': {description: CSV file}
+  /api/v1/predictions:
+    get:
+      tags: [Predictions]
+      summary: List predictions, optional ?kind= (87/94)
+      parameters:
+        - {name: kind, in: query, schema: {type: string}}
+      responses:
+        '200': {description: Prediction list}
+  /api/v1/predictions/training-risk/{studentId}:
+    post:
+      tags: [Predictions]
+      summary: Compute + store training-risk flag Low/Medium/High (88/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: studentId, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '201': {description: Risk stored}
+  /api/v1/predictions/{id}/decision:
+    patch:
+      tags: [Predictions]
+      summary: Record human decision ACCEPTED/OVERRIDDEN/IGNORED (89/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [decision]
+              properties:
+                decision: {type: string, enum: [ACCEPTED, OVERRIDDEN, IGNORED]}
+                outcome: {type: string}
+      responses:
+        '200': {description: Recorded}
+  /api/v1/attachments:
+    get:
+      tags: [Attachments]
+      summary: List by ?owner_type=&owner_id= (90/94)
+      parameters:
+        - {name: owner_type, in: query, schema: {type: string}}
+        - {name: owner_id, in: query, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Attachment list}
+    post:
+      tags: [Attachments]
+      summary: Register file metadata, storage_key generated (91/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [owner_type, owner_id, file_name, mime_type, size_bytes]
+              properties:
+                owner_type: {type: string}
+                owner_id: {type: string, format: uuid}
+                file_name: {type: string}
+                mime_type: {type: string}
+                size_bytes: {type: integer}
+      responses:
+        '201': {description: Created}
+  /api/v1/notifications:
+    get:
+      tags: [Notifications]
+      summary: List my notifications (92/94)
+      security: [{bearerAuth: []}]
+      responses:
+        '200': {description: Notification list}
+    post:
+      tags: [Notifications]
+      summary: Create notification (93/94)
+      security: [{bearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [user_id, body]
+              properties:
+                user_id: {type: string, format: uuid}
+                type: {type: string}
+                body: {type: string}
+      responses:
+        '201': {description: Created}
+  /api/v1/notifications/{id}/read:
+    patch:
+      tags: [Notifications]
+      summary: Mark as read (94/94)
+      security: [{bearerAuth: []}]
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: Updated}
