@@ -4,6 +4,8 @@ info:
   description: Workshop Management & Student Practical Training (WST) — 94 project endpoints + health check
   version: 1.0.0
 servers:
+  - url: https://abdelmasih-maher-backend.vercel.app
+    description: Production (Vercel + Neon)
   - url: http://localhost:5000
     description: Local dev
 tags:
