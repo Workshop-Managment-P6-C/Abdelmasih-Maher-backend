@@ -138,8 +138,69 @@ const deleteUser = async (id) => {
   return rows[0] || null;
 };
 
-const refresh = async (refreshToken) => {
-  if (!refreshToken) {
+// Password reset (stateless): resetToken is a short-lived JWT (type 'reset').
+// MVP has no email service, so the token is returned to the caller;
+// production should email it instead of returning it.
+const forgotPassword = async (email) => {
+  if (!email) {
+    const e = new Error('Email is required');
+    e.statusCode = 400;
+    e.code = 'VALIDATION_ERROR';
+    throw e;
+  }
+  const { rows } = await db.query('SELECT id, is_active FROM app_user WHERE email = $1', [email]);
+  const user = rows[0];
+  // Generic response either way so accounts can't be enumerated.
+  if (!user || user.is_active === false) {
+    return { message: 'If the account exists, a reset token has been issued' };
+  }
+  const resetToken = jwt.sign({ userId: user.id, type: 'reset' }, JWT_SECRET, { expiresIn: '15m' });
+  return { message: 'If the account exists, a reset token has been issued', resetToken };
+};
+
+const resetPassword = async (resetToken, newPassword) => {
+  if (!resetToken || !newPassword) {
+    const e = new Error('resetToken and newPassword are required');
+    e.statusCode = 400;
+    e.code = 'VALIDATION_ERROR';
+    throw e;
+  }
+  if (String(newPassword).length < 6) {
+    const e = new Error('newPassword must be at least 6 characters');
+    e.statusCode = 400;
+    e.code = 'VALIDATION_ERROR';
+    throw e;
+  }
+  let payload;
+  try {
+    payload = jwt.verify(resetToken, JWT_SECRET);
+  } catch (_) {
+    const e = new Error('Invalid or expired reset token');
+    e.statusCode = 401;
+    e.code = 'UNAUTHORIZED';
+    throw e;
+  }
+  if (!payload || payload.type !== 'reset' || !payload.userId) {
+    const e = new Error('Invalid reset token');
+    e.statusCode = 401;
+    e.code = 'UNAUTHORIZED';
+    throw e;
+  }
+  const hash = await bcrypt.hash(String(newPassword), 10);
+  const { rows } = await db.query(
+    'UPDATE app_user SET password_hash = $1, updated_at = NOW() WHERE id = $2 AND COALESCE(is_active, true) = true RETURNING id',
+    [hash, payload.userId]
+  );
+  if (!rows.length) {
+    const e = new Error('User account is disabled');
+    e.statusCode = 403;
+    e.code = 'FORBIDDEN';
+    throw e;
+  }
+  return { success: true, message: 'Password has been reset' };
+};
+
+const refresh = async (refreshToken) => {  if (!refreshToken) {
     const e = new Error('refreshToken is required');
     e.statusCode = 400;
     e.code = 'VALIDATION_ERROR';
@@ -176,6 +237,8 @@ module.exports = {
   login,
   register,
   refresh,
+  forgotPassword,
+  resetPassword,
   findUserByEmail,
   getAllUsers,
   getUserById,

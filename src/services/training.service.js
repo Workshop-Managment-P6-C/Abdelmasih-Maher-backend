@@ -272,6 +272,41 @@ async function createHallBooking({ hall_id, starts_at, ends_at, training_session
   );
   return rows[0];
 }
+async function getHallBookingById(id) {
+  const { rows } = await db.query('SELECT * FROM hall_booking WHERE id = $1', [id]);
+  return rows[0] || null;
+}
+async function updateHallBooking(id, { starts_at, ends_at, training_session_id }) {
+  const current = await getHallBookingById(id);
+  if (!current) return null;
+  const from = starts_at || current.starts_at;
+  const to = ends_at || current.ends_at;
+  if (new Date(to) <= new Date(from)) {
+    const e = new Error('ends_at must be after starts_at');
+    e.statusCode = 400; e.code = 'VALIDATION_ERROR'; throw e;
+  }
+  // Overlap guard, excluding this booking itself
+  const { rows: clash } = await db.query(
+    `SELECT id FROM hall_booking WHERE hall_id = $1 AND id <> $4
+     AND starts_at < $3 AND ends_at > $2 LIMIT 1`,
+    [current.hall_id, from, to, id]
+  );
+  if (clash.length) {
+    const e = new Error('Hall is already booked for the requested time slot');
+    e.statusCode = 409; e.code = 'CONFLICT'; throw e;
+  }
+  const { rows } = await db.query(
+    `UPDATE hall_booking SET starts_at = $1, ends_at = $2,
+       training_session_id = COALESCE($3, training_session_id)
+     WHERE id = $4 RETURNING *`,
+    [from, to, training_session_id || null, id]
+  );
+  return rows[0] || null;
+}
+async function deleteHallBooking(id) {
+  const { rows } = await db.query('DELETE FROM hall_booking WHERE id = $1 RETURNING id', [id]);
+  return rows[0] || null;
+}
 
 module.exports = {
   listCourses, getCourseById, createCourse, updateCourse, deleteCourse,
@@ -280,5 +315,5 @@ module.exports = {
   listAttendance, recordAttendance,
   listAssessments, createAssessment, signAssessment, competencyCoverage,
   getCertificatesByStudent, createCertificate, verifyCertificate, revokeCertificate,
-  listHallBookings, createHallBooking,
+  listHallBookings, createHallBooking, getHallBookingById, updateHallBooking, deleteHallBooking,
 };

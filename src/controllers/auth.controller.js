@@ -30,6 +30,26 @@ const refresh = asyncHandler(async (req, res) => {
   }
 });
 
+const forgotPassword = asyncHandler(async (req, res) => {
+  try {
+    const { email } = req.body || {};
+    const result = await authService.forgotPassword(email);
+    return res.status(200).json(result);
+  } catch (error) {
+    return sendError(res, req, error);
+  }
+});
+
+const resetPassword = asyncHandler(async (req, res) => {
+  try {
+    const { resetToken, newPassword } = req.body || {};
+    const result = await authService.resetPassword(resetToken, newPassword);
+    return res.status(200).json(result);
+  } catch (error) {
+    return sendError(res, req, error);
+  }
+});
+
 const getMe = asyncHandler(async (req, res) => {
   try {
     const user = await authService.findUserByEmail(req.user.email);
@@ -83,6 +103,8 @@ module.exports = {
   login,
   register,
   refresh,
+  forgotPassword,
+  resetPassword,
   getMe,
   getUsers,
   getUserById,

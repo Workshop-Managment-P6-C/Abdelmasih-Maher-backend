@@ -9,5 +9,7 @@ router.get('/', authenticateToken, authorize('WORKSHOP_MANAGER', 'TRAINING_SUPER
 router.post('/', authenticateToken, authorize('WORKSHOP_MANAGER', 'TRAINING_SUPERVISOR'), s.createHall);
 router.get('/bookings', authenticateToken, authorize('WORKSHOP_MANAGER', 'TRAINING_SUPERVISOR', 'MENTOR'), t.getHallBookings);
 router.post('/bookings', authenticateToken, authorize('WORKSHOP_MANAGER', 'TRAINING_SUPERVISOR', 'MENTOR'), t.createHallBooking);
+router.patch('/bookings/:id', authenticateToken, authorize('WORKSHOP_MANAGER', 'TRAINING_SUPERVISOR', 'MENTOR'), t.updateHallBooking);
+router.delete('/bookings/:id', authenticateToken, authorize('WORKSHOP_MANAGER', 'TRAINING_SUPERVISOR', 'MENTOR'), t.deleteHallBooking);
 
 module.exports = router;

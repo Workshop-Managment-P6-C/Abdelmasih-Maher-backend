@@ -174,6 +174,20 @@ const createHallBooking = asyncHandler(async (req, res) => {
   try { res.status(201).json({ success: true, data: await svc.createHallBooking(req.body || {}) }); }
   catch (e) { sendError(res, req, e); }
 });
+const updateHallBooking = asyncHandler(async (req, res) => {
+  try {
+    const row = await svc.updateHallBooking(req.params.id, req.body || {});
+    if (!row) return notFound(res, 'Hall booking');
+    res.status(200).json({ success: true, data: row });
+  } catch (e) { sendError(res, req, e); }
+});
+const deleteHallBooking = asyncHandler(async (req, res) => {
+  try {
+    const row = await svc.deleteHallBooking(req.params.id);
+    if (!row) return notFound(res, 'Hall booking');
+    res.status(200).json({ success: true, message: 'Hall booking cancelled' });
+  } catch (e) { sendError(res, req, e); }
+});
 
 // Legacy job-card placeholders (kept so old /job-cards root never 500s)
 const getJobCards = asyncHandler(async (req, res) => {
@@ -192,6 +206,6 @@ module.exports = {
   getEnrollments, enrollStudent, deleteEnrollment,
   getAttendance, recordAttendance,
   getCertificates, createCertificate, verifyCertificate, revokeCertificate,
-  getHallBookings, createHallBooking,
+  getHallBookings, createHallBooking, updateHallBooking, deleteHallBooking,
   getJobCards, createJobCard,
 };
