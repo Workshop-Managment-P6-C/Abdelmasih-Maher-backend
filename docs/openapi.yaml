@@ -353,6 +353,24 @@ paths:
         '201': {description: Created}
         '400': {description: Validation error, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
         '409': {description: Email conflict, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+  /api/v1/auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Refresh tokens with a valid refreshToken (rotates both tokens)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties:
+                refreshToken: {type: string}
+      responses:
+        '200': {description: New accessToken + refreshToken + user}
+        '400': {description: refreshToken missing, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+        '401': {description: Invalid or expired refresh token, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
+        '403': {description: User disabled, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
   /api/v1/auth/me:
     get:
       tags: [Auth]
