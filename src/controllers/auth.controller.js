@@ -20,6 +20,16 @@ const register = asyncHandler(async (req, res) => {
   }
 });
 
+const refresh = asyncHandler(async (req, res) => {
+  try {
+    const { refreshToken } = req.body || {};
+    const result = await authService.refresh(refreshToken);
+    return res.status(200).json(result);
+  } catch (error) {
+    return sendError(res, req, error);
+  }
+});
+
 const getMe = asyncHandler(async (req, res) => {
   try {
     const user = await authService.findUserByEmail(req.user.email);
@@ -72,6 +82,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 module.exports = {
   login,
   register,
+  refresh,
   getMe,
   getUsers,
   getUserById,

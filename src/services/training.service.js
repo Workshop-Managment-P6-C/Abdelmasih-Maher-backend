@@ -2,7 +2,10 @@
 // and column names from the wst schema (mirrors P6-C compact ERD v3).
 const db = require('../config/db');
 
-const toJson = (v) => (typeof v === 'string' ? v : JSON.stringify(v));
+const toJson = (v) => {
+  if (typeof v !== 'string') return JSON.stringify(v);
+  try { JSON.parse(v); return v; } catch { return JSON.stringify({ en: v }); }
+};
 
 // ---------- Courses ----------
 // course(id, code, name jsonb {"en","ar"}, required_sessions)

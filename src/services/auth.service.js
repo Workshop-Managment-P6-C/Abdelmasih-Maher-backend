@@ -138,9 +138,44 @@ const deleteUser = async (id) => {
   return rows[0] || null;
 };
 
+const refresh = async (refreshToken) => {
+  if (!refreshToken) {
+    const e = new Error('refreshToken is required');
+    e.statusCode = 400;
+    e.code = 'VALIDATION_ERROR';
+    throw e;
+  }
+  let payload;
+  try {
+    payload = jwt.verify(refreshToken, JWT_SECRET);
+  } catch (_) {
+    const e = new Error('Invalid or expired refresh token');
+    e.statusCode = 401;
+    e.code = 'UNAUTHORIZED';
+    throw e;
+  }
+  if (!payload || payload.type !== 'refresh' || !payload.userId) {
+    const e = new Error('Invalid refresh token');
+    e.statusCode = 401;
+    e.code = 'UNAUTHORIZED';
+    throw e;
+  }
+  const { rows } = await db.query(`SELECT ${PUBLIC_COLUMNS} FROM app_user WHERE id = $1`, [payload.userId]);
+  const user = rows[0];
+  if (!user || user.is_active === false) {
+    const e = new Error('User account is disabled');
+    e.statusCode = 403;
+    e.code = 'FORBIDDEN';
+    throw e;
+  }
+  const { password_hash: _ph, ...safe } = user;
+  return { ...signTokens(user), user: safe };
+};
+
 module.exports = {
   login,
   register,
+  refresh,
   findUserByEmail,
   getAllUsers,
   getUserById,

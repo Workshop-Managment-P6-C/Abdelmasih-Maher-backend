@@ -17,7 +17,7 @@ const endpoints = [
   ['GET', '/api/v1/courses/{id}'],
   ['PUT', '/api/v1/courses/{id}'],
   ['DELETE', '/api/v1/courses/{id}'],
-  ['GET', '/api/v1/tasks'],
+  ['GET','/api/v1/tasks'],
   ['POST', '/api/v1/tasks'],
   ['GET', '/api/v1/tasks/{id}'],
   ['PUT', '/api/v1/tasks/{id}'],
