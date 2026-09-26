@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: BUA DevHub API Documentation
-  description: Workshop Management & Student Practical Training (WST) — 94 project endpoints + health check
+  description: Workshop Management & Student Practical Training (WST) — 99 project endpoints + health check
   version: 1.0.0
 servers:
   - url: https://abdelmasih-maher-backend.vercel.app
@@ -322,7 +322,7 @@ paths:
   /api/v1/auth/login:
     post:
       tags: [Auth]
-      summary: Login with email + password (1/94)
+      summary: Login with email + password (1/99)
       requestBody:
         required: true
         content:
@@ -339,7 +339,7 @@ paths:
   /api/v1/auth/register:
     post:
       tags: [Auth]
-      summary: Register a new user (2/94)
+      summary: Register a new user (2/99)
       requestBody:
         required: true
         content:
@@ -358,7 +358,7 @@ paths:
   /api/v1/auth/refresh:
     post:
       tags: [Auth]
-      summary: Refresh tokens with a valid refreshToken (rotates both tokens)
+      summary: Refresh tokens with a valid refreshToken (rotates both tokens) (3/99)
       requestBody:
         required: true
         content:
@@ -376,7 +376,7 @@ paths:
   /api/v1/auth/me:
     get:
       tags: [Auth]
-      summary: Current authenticated user (3/94)
+      summary: Current authenticated user (4/99)
       security: [{bearerAuth: []}]
       responses:
         '200': {description: Current user}
@@ -384,7 +384,7 @@ paths:
   /api/v1/auth/forgot-password:
     post:
       tags: [Auth]
-      summary: Request a password-reset token (15 min, emailed in production)
+      summary: Request a password-reset token (15 min, emailed in production) (5/99)
       requestBody:
         required: true
         content:
@@ -400,7 +400,7 @@ paths:
   /api/v1/auth/reset-password:
     post:
       tags: [Auth]
-      summary: Set a new password with a reset token (min 6 chars)
+      summary: Set a new password with a reset token (min 6 chars) (6/99)
       requestBody:
         required: true
         content:
@@ -418,7 +418,7 @@ paths:
   /api/v1/users:
     get:
       tags: [Users]
-      summary: List all users (4/94)
+      summary: List all users (7/99)
       security: [{bearerAuth: []}]
       responses:
         '200': {description: User list}
@@ -426,7 +426,7 @@ paths:
   /api/v1/users/{id}:
     get:
       tags: [Users]
-      summary: Get user by id (5/94)
+      summary: Get user by id (8/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -435,7 +435,7 @@ paths:
         '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
     put:
       tags: [Users]
-      summary: Update user (6/94)
+      summary: Update user (9/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -458,7 +458,7 @@ paths:
         '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
     delete:
       tags: [Users]
-      summary: Deactivate user (soft delete) (7/94)
+      summary: Deactivate user (soft delete) (10/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -468,12 +468,12 @@ paths:
   /api/v1/courses:
     get:
       tags: [Courses]
-      summary: List courses (8/94)
+      summary: List courses (11/99)
       responses:
         '200': {description: Course list}
     post:
       tags: [Courses]
-      summary: Create course (9/94)
+      summary: Create course (12/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -494,7 +494,7 @@ paths:
   /api/v1/courses/{id}:
     get:
       tags: [Courses]
-      summary: Get course by id (10/94)
+      summary: Get course by id (13/99)
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
       responses:
@@ -502,7 +502,7 @@ paths:
         '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
     put:
       tags: [Courses]
-      summary: Update course (11/94)
+      summary: Update course (14/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -516,7 +516,7 @@ paths:
         '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
     delete:
       tags: [Courses]
-      summary: Delete course (12/94)
+      summary: Delete course (15/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -526,14 +526,14 @@ paths:
   /api/v1/tasks:
     get:
       tags: [Tasks]
-      summary: List practical tasks, optional ?course_id= (13/94)
+      summary: List practical tasks, optional ?course_id= (16/99)
       parameters:
         - {name: course_id, in: query, schema: {type: string, format: uuid}}
       responses:
         '200': {description: Task list}
     post:
       tags: [Tasks]
-      summary: Create practical task (14/94)
+      summary: Create practical task (17/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -554,7 +554,7 @@ paths:
   /api/v1/tasks/{id}:
     get:
       tags: [Tasks]
-      summary: Get task by id (15/94)
+      summary: Get task by id (18/99)
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
       responses:
@@ -562,7 +562,7 @@ paths:
         '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
     put:
       tags: [Tasks]
-      summary: Update task (16/94)
+      summary: Update task (19/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -576,7 +576,7 @@ paths:
         '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
     delete:
       tags: [Tasks]
-      summary: Delete task (17/94)
+      summary: Delete task (20/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -586,7 +586,7 @@ paths:
   /api/v1/assessments:
     get:
       tags: [Assessments]
-      summary: List assessments, optional ?student_id=&training_session_id= (18/94)
+      summary: List assessments, optional ?student_id=&training_session_id= (21/99)
       parameters:
         - {name: student_id, in: query, schema: {type: string, format: uuid}}
         - {name: training_session_id, in: query, schema: {type: string, format: uuid}}
@@ -594,7 +594,7 @@ paths:
         '200': {description: Assessment list}
     post:
       tags: [Assessments]
-      summary: Create assessment result (19/94)
+      summary: Create assessment result (22/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -617,7 +617,7 @@ paths:
   /api/v1/enrollments:
     get:
       tags: [Enrollments]
-      summary: List enrollments, optional ?student_id=&course_id= (20/94)
+      summary: List enrollments, optional ?student_id=&course_id= (23/99)
       parameters:
         - {name: student_id, in: query, schema: {type: string, format: uuid}}
         - {name: course_id, in: query, schema: {type: string, format: uuid}}
@@ -625,7 +625,7 @@ paths:
         '200': {description: Enrollment list}
     post:
       tags: [Enrollments]
-      summary: Enroll student (21/94)
+      summary: Enroll student (24/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -645,7 +645,7 @@ paths:
   /api/v1/enrollments/{id}:
     delete:
       tags: [Enrollments]
-      summary: Delete enrollment (22/94)
+      summary: Delete enrollment (25/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -655,7 +655,7 @@ paths:
   /api/v1/attendance:
     get:
       tags: [Attendance]
-      summary: List attendance, optional ?training_session_id=&student_id= (23/94)
+      summary: List attendance, optional ?training_session_id=&student_id= (26/99)
       parameters:
         - {name: training_session_id, in: query, schema: {type: string, format: uuid}}
         - {name: student_id, in: query, schema: {type: string, format: uuid}}
@@ -663,7 +663,7 @@ paths:
         '200': {description: Attendance list}
     post:
       tags: [Attendance]
-      summary: Record attendance (upsert per session+student) (24/94)
+      summary: Record attendance (upsert per session+student) (27/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -683,7 +683,7 @@ paths:
   /api/v1/certificates/user/{id}:
     get:
       tags: [Certificates]
-      summary: Get certificates for a student (25/94)
+      summary: Get certificates for a student (28/99)
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}, description: student_id}
       responses:
@@ -691,7 +691,7 @@ paths:
   /api/v1/certificates:
     post:
       tags: [Certificates]
-      summary: Issue certificate (26/94)
+      summary: Issue certificate (29/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -710,14 +710,14 @@ paths:
   /api/v1/halls/bookings:
     get:
       tags: [Halls]
-      summary: List hall bookings, optional ?hall_id= (27/94)
+      summary: List hall bookings, optional ?hall_id= (30/99)
       parameters:
         - {name: hall_id, in: query, schema: {type: string, format: uuid}}
       responses:
         '200': {description: Booking list}
     post:
       tags: [Halls]
-      summary: Create hall booking with overlap guard (28/94)
+      summary: Create hall booking with overlap guard (31/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -738,7 +738,7 @@ paths:
   /api/v1/halls/bookings/{id}:
     patch:
       tags: [Halls]
-      summary: Reschedule a hall booking (overlap guard excludes itself)
+      summary: Reschedule a hall booking (overlap guard excludes itself) (32/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -759,7 +759,7 @@ paths:
         '409': {description: Time-slot conflict, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
     delete:
       tags: [Halls]
-      summary: Cancel (delete) a hall booking
+      summary: Cancel (delete) a hall booking (33/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -769,12 +769,12 @@ paths:
   /api/v1/customers:
     get:
       tags: [Customers]
-      summary: List customers (29/94)
+      summary: List customers (34/99)
       responses:
         '200': {description: Customer list}
     post:
       tags: [Customers]
-      summary: Create customer (30/94)
+      summary: Create customer (35/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -794,7 +794,7 @@ paths:
   /api/v1/customers/{id}:
     get:
       tags: [Customers]
-      summary: Get customer by id (31/94)
+      summary: Get customer by id (36/99)
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
       responses:
@@ -802,7 +802,7 @@ paths:
         '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
     put:
       tags: [Customers]
-      summary: Update customer (32/94)
+      summary: Update customer (37/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -817,14 +817,14 @@ paths:
   /api/v1/vehicles:
     get:
       tags: [Vehicles]
-      summary: List vehicles, optional ?customer_id= (33/94)
+      summary: List vehicles, optional ?customer_id= (38/99)
       parameters:
         - {name: customer_id, in: query, schema: {type: string, format: uuid}}
       responses:
         '200': {description: Vehicle list}
     post:
       tags: [Vehicles]
-      summary: Create vehicle (34/94)
+      summary: Create vehicle (39/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -846,7 +846,7 @@ paths:
   /api/v1/vehicles/{id}:
     get:
       tags: [Vehicles]
-      summary: Get vehicle by id (35/94)
+      summary: Get vehicle by id (40/99)
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
       responses:
@@ -854,7 +854,7 @@ paths:
         '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
     put:
       tags: [Vehicles]
-      summary: Update vehicle (36/94)
+      summary: Update vehicle (41/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -867,7 +867,7 @@ paths:
         '200': {description: Updated}
     delete:
       tags: [Vehicles]
-      summary: Archive vehicle (37/94)
+      summary: Archive vehicle (42/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -876,12 +876,12 @@ paths:
   /api/v1/bays:
     get:
       tags: [Bays]
-      summary: List bays (38/94)
+      summary: List bays (43/99)
       responses:
         '200': {description: Bay list}
     post:
       tags: [Bays]
-      summary: Create bay (39/94)
+      summary: Create bay (44/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -898,7 +898,7 @@ paths:
   /api/v1/job-cards:
     get:
       tags: [JobCards]
-      summary: List job cards, optional ?stage=&technician_id=&bay_id= (40/94)
+      summary: List job cards, optional ?stage=&technician_id=&bay_id= (45/99)
       parameters:
         - {name: stage, in: query, schema: {type: string, enum: [RECEIVED, IN_PROGRESS, QUALITY_CHECK, READY, DELIVERED]}}
         - {name: technician_id, in: query, schema: {type: string, format: uuid}}
@@ -907,7 +907,7 @@ paths:
         '200': {description: Job card list}
     post:
       tags: [JobCards]
-      summary: Create job card (41/94)
+      summary: Create job card (46/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -932,7 +932,7 @@ paths:
   /api/v1/job-cards/{id}:
     get:
       tags: [JobCards]
-      summary: Get job card by id (42/94)
+      summary: Get job card by id (47/99)
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
       responses:
@@ -940,7 +940,7 @@ paths:
         '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
     put:
       tags: [JobCards]
-      summary: Update job card (43/94)
+      summary: Update job card (48/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -954,7 +954,7 @@ paths:
   /api/v1/job-cards/{id}/stage:
     patch:
       tags: [JobCards]
-      summary: Transition stage with audit (44/94)
+      summary: Transition stage with audit (49/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -974,7 +974,7 @@ paths:
   /api/v1/job-cards/{id}/stages:
     get:
       tags: [JobCards]
-      summary: Stage history / audit trail (45/94)
+      summary: Stage history / audit trail (50/99)
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
       responses:
@@ -982,14 +982,14 @@ paths:
   /api/v1/job-cards/{id}/work-items:
     get:
       tags: [WorkItems]
-      summary: List work items of a job (46/94)
+      summary: List work items of a job (51/99)
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
       responses:
         '200': {description: Work item list}
     post:
       tags: [WorkItems]
-      summary: Add work item (47/94)
+      summary: Add work item (52/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -1008,7 +1008,7 @@ paths:
   /api/v1/work-items/{id}/approve:
     patch:
       tags: [WorkItems]
-      summary: Approve / decline work item (48/94)
+      summary: Approve / decline work item (53/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -1026,14 +1026,14 @@ paths:
   /api/v1/job-cards/{id}/labor:
     get:
       tags: [Labor]
-      summary: List labour entries of a job (49/94)
+      summary: List labour entries of a job (54/99)
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
       responses:
         '200': {description: Labour list}
     post:
       tags: [Labor]
-      summary: Log labour (50/94)
+      summary: Log labour (55/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -1054,14 +1054,14 @@ paths:
   /api/v1/bay-bookings:
     get:
       tags: [BayBookings]
-      summary: List bay bookings (51/94)
+      summary: List bay bookings (56/99)
       parameters:
         - {name: bay_id, in: query, schema: {type: string, format: uuid}}
       responses:
         '200': {description: Booking list}
     post:
       tags: [BayBookings]
-      summary: Create bay booking with overlap guard (52/94)
+      summary: Create bay booking with overlap guard (57/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -1082,7 +1082,7 @@ paths:
   /api/v1/parts:
     get:
       tags: [Parts]
-      summary: List parts, optional ?category=&q= (53/94)
+      summary: List parts, optional ?category=&q= (58/99)
       parameters:
         - {name: category, in: query, schema: {type: string}}
         - {name: q, in: query, schema: {type: string}}
@@ -1090,7 +1090,7 @@ paths:
         '200': {description: Parts list}
     post:
       tags: [Parts]
-      summary: Create part (54/94)
+      summary: Create part (59/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -1115,7 +1115,7 @@ paths:
   /api/v1/parts/{id}:
     get:
       tags: [Parts]
-      summary: Get part by id (55/94)
+      summary: Get part by id (60/99)
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
       responses:
@@ -1123,7 +1123,7 @@ paths:
         '404': {description: Not found, content: {application/json: {schema: {$ref: '#/components/schemas/Error'}}}}
     put:
       tags: [Parts]
-      summary: Update part (56/94)
+      summary: Update part (61/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -1137,7 +1137,7 @@ paths:
   /api/v1/stock/balances:
     get:
       tags: [Stock]
-      summary: On-hand balances per part/store (57/94)
+      summary: On-hand balances per part/store (62/99)
       parameters:
         - {name: store_code, in: query, schema: {type: string}}
       responses:
@@ -1145,7 +1145,7 @@ paths:
   /api/v1/stock/movements:
     get:
       tags: [Stock]
-      summary: Ledger entries, optional ?part_id=&store_code=&job_card_id= (58/94)
+      summary: Ledger entries, optional ?part_id=&store_code=&job_card_id= (63/99)
       parameters:
         - {name: part_id, in: query, schema: {type: string, format: uuid}}
         - {name: store_code, in: query, schema: {type: string}}
@@ -1154,7 +1154,7 @@ paths:
         '200': {description: Movements}
     post:
       tags: [Stock]
-      summary: Record movement with stock guard (59/94)
+      summary: Record movement with stock guard (64/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -1177,20 +1177,20 @@ paths:
   /api/v1/stock/reorder-suggestions:
     get:
       tags: [Stock]
-      summary: Rule baseline reorder suggestions (60/94)
+      summary: Rule baseline reorder suggestions (65/99)
       responses:
         '200': {description: Suggestions with suggested_qty + rule_version}
   /api/v1/purchase-orders:
     get:
       tags: [Purchasing]
-      summary: List purchase orders, optional ?status= (61/94)
+      summary: List purchase orders, optional ?status= (66/99)
       parameters:
         - {name: status, in: query, schema: {type: string}}
       responses:
         '200': {description: PO list}
     post:
       tags: [Purchasing]
-      summary: Create PO with lines, threshold sets approvals_required (62/94)
+      summary: Create PO with lines, threshold sets approvals_required (67/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -1209,7 +1209,7 @@ paths:
   /api/v1/purchase-orders/{id}:
     get:
       tags: [Purchasing]
-      summary: Get PO with lines (63/94)
+      summary: Get PO with lines (68/99)
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
       responses:
@@ -1218,7 +1218,7 @@ paths:
   /api/v1/purchase-orders/{id}/submit:
     post:
       tags: [Purchasing]
-      summary: Submit draft PO (64/94)
+      summary: Submit draft PO (69/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -1227,7 +1227,7 @@ paths:
   /api/v1/purchase-orders/{id}/approve:
     post:
       tags: [Purchasing]
-      summary: Approve (two distinct approvers above threshold) (65/94)
+      summary: Approve (two distinct approvers above threshold) (70/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -1237,7 +1237,7 @@ paths:
   /api/v1/purchase-orders/{id}/receive:
     post:
       tags: [Purchasing]
-      summary: Goods receipt, writes RECEIPT ledger rows (66/94)
+      summary: Goods receipt, writes RECEIPT ledger rows (71/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -1255,7 +1255,7 @@ paths:
   /api/v1/invoices:
     get:
       tags: [Invoices]
-      summary: List invoices, optional ?job_card_id=&status= (67/94)
+      summary: List invoices, optional ?job_card_id=&status= (72/99)
       parameters:
         - {name: job_card_id, in: query, schema: {type: string, format: uuid}}
         - {name: status, in: query, schema: {type: string}}
@@ -1264,7 +1264,7 @@ paths:
   /api/v1/invoices/compute:
     post:
       tags: [Invoices]
-      summary: Compute draft invoice from uninvoiced labour+parts (68/94)
+      summary: Compute draft invoice from uninvoiced labour+parts (73/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -1283,7 +1283,7 @@ paths:
   /api/v1/invoices/{id}:
     get:
       tags: [Invoices]
-      summary: Get invoice with lines (69/94)
+      summary: Get invoice with lines (74/99)
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
       responses:
@@ -1292,7 +1292,7 @@ paths:
   /api/v1/invoices/{id}/status:
     patch:
       tags: [Invoices]
-      summary: Set ISSUED/PAID/VOID (70/94)
+      summary: Set ISSUED/PAID/VOID (75/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -1310,12 +1310,12 @@ paths:
   /api/v1/halls:
     get:
       tags: [Halls]
-      summary: List halls (71/94)
+      summary: List halls (76/99)
       responses:
         '200': {description: Hall list}
     post:
       tags: [Halls]
-      summary: Create hall (72/94)
+      summary: Create hall (77/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -1332,7 +1332,7 @@ paths:
   /api/v1/sessions:
     get:
       tags: [Sessions]
-      summary: List sessions, optional ?course_id=&group_code=&mentor_id= (73/94)
+      summary: List sessions, optional ?course_id=&group_code=&mentor_id= (78/99)
       parameters:
         - {name: course_id, in: query, schema: {type: string, format: uuid}}
         - {name: group_code, in: query, schema: {type: string}}
@@ -1341,7 +1341,7 @@ paths:
         '200': {description: Session list}
     post:
       tags: [Sessions]
-      summary: Schedule session with hall+mentor conflict check (74/94)
+      summary: Schedule session with hall+mentor conflict check (79/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -1364,7 +1364,7 @@ paths:
   /api/v1/sessions/{id}:
     get:
       tags: [Sessions]
-      summary: Get session by id (75/94)
+      summary: Get session by id (80/99)
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
       responses:
@@ -1373,7 +1373,7 @@ paths:
   /api/v1/sessions/{id}/status:
     patch:
       tags: [Sessions]
-      summary: Set PLANNED/CONFIRMED/COMPLETED/CANCELLED (76/94)
+      summary: Set PLANNED/CONFIRMED/COMPLETED/CANCELLED (81/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -1391,7 +1391,7 @@ paths:
   /api/v1/assessments/{id}/sign:
     patch:
       tags: [Assessments]
-      summary: Supervisor sign-off, signer must differ from mentor (77/94)
+      summary: Supervisor sign-off, signer must differ from mentor (82/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -1408,7 +1408,7 @@ paths:
   /api/v1/certificates/verify/{token}:
     get:
       tags: [Certificates]
-      summary: Public certificate verification by token (78/94)
+      summary: Public certificate verification by token (83/99)
       parameters:
         - {name: token, in: path, required: true, schema: {type: string}}
       responses:
@@ -1417,7 +1417,7 @@ paths:
   /api/v1/certificates/{id}/revoke:
     patch:
       tags: [Certificates]
-      summary: Revoke certificate (79/94)
+      summary: Revoke certificate (84/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -1433,7 +1433,7 @@ paths:
   /api/v1/students/{studentId}/competency:
     get:
       tags: [Students]
-      summary: Competency coverage, ?course_id= required (80/94)
+      summary: Competency coverage, ?course_id= required (85/99)
       parameters:
         - {name: studentId, in: path, required: true, schema: {type: string, format: uuid}}
         - {name: course_id, in: query, required: true, schema: {type: string, format: uuid}}
@@ -1442,49 +1442,49 @@ paths:
   /api/v1/dashboards/jobs:
     get:
       tags: [Dashboards]
-      summary: Jobs by stage, turnaround, bay utilization (81/94)
+      summary: Jobs by stage, turnaround, bay utilization (86/99)
       security: [{bearerAuth: []}]
       responses:
         '200': {description: Dashboard data}
   /api/v1/dashboards/stock:
     get:
       tags: [Dashboards]
-      summary: Stock balances + below-min list (82/94)
+      summary: Stock balances + below-min list (87/99)
       security: [{bearerAuth: []}]
       responses:
         '200': {description: Dashboard data}
   /api/v1/dashboards/training:
     get:
       tags: [Dashboards]
-      summary: Attendance, assessments, competency coverage (83/94)
+      summary: Attendance, assessments, competency coverage (88/99)
       security: [{bearerAuth: []}]
       responses:
         '200': {description: Dashboard data}
   /api/v1/exports/jobs.csv:
     get:
       tags: [Exports]
-      summary: Jobs CSV export (84/94)
+      summary: Jobs CSV export (89/99)
       security: [{bearerAuth: []}]
       responses:
         '200': {description: CSV file}
   /api/v1/exports/stock.csv:
     get:
       tags: [Exports]
-      summary: Stock ledger CSV export (85/94)
+      summary: Stock ledger CSV export (90/99)
       security: [{bearerAuth: []}]
       responses:
         '200': {description: CSV file}
   /api/v1/exports/attendance.csv:
     get:
       tags: [Exports]
-      summary: Attendance CSV export (86/94)
+      summary: Attendance CSV export (91/99)
       security: [{bearerAuth: []}]
       responses:
         '200': {description: CSV file}
   /api/v1/predictions:
     get:
       tags: [Predictions]
-      summary: List predictions, optional ?kind= (87/94)
+      summary: List predictions, optional ?kind= (92/99)
       parameters:
         - {name: kind, in: query, schema: {type: string}}
       responses:
@@ -1492,7 +1492,7 @@ paths:
   /api/v1/predictions/training-risk/{studentId}:
     post:
       tags: [Predictions]
-      summary: Compute + store training-risk flag Low/Medium/High (88/94)
+      summary: Compute + store training-risk flag Low/Medium/High (93/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: studentId, in: path, required: true, schema: {type: string, format: uuid}}
@@ -1501,7 +1501,7 @@ paths:
   /api/v1/predictions/{id}/decision:
     patch:
       tags: [Predictions]
-      summary: Record human decision ACCEPTED/OVERRIDDEN/IGNORED (89/94)
+      summary: Record human decision ACCEPTED/OVERRIDDEN/IGNORED (94/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
@@ -1520,7 +1520,7 @@ paths:
   /api/v1/attachments:
     get:
       tags: [Attachments]
-      summary: List by ?owner_type=&owner_id= (90/94)
+      summary: List by ?owner_type=&owner_id= (95/99)
       parameters:
         - {name: owner_type, in: query, schema: {type: string}}
         - {name: owner_id, in: query, schema: {type: string, format: uuid}}
@@ -1528,7 +1528,7 @@ paths:
         '200': {description: Attachment list}
     post:
       tags: [Attachments]
-      summary: Register file metadata, storage_key generated (91/94)
+      summary: Register file metadata, storage_key generated (96/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -1548,13 +1548,13 @@ paths:
   /api/v1/notifications:
     get:
       tags: [Notifications]
-      summary: List my notifications (92/94)
+      summary: List my notifications (97/99)
       security: [{bearerAuth: []}]
       responses:
         '200': {description: Notification list}
     post:
       tags: [Notifications]
-      summary: Create notification (93/94)
+      summary: Create notification (98/99)
       security: [{bearerAuth: []}]
       requestBody:
         required: true
@@ -1572,7 +1572,7 @@ paths:
   /api/v1/notifications/{id}/read:
     patch:
       tags: [Notifications]
-      summary: Mark as read (94/94)
+      summary: Mark as read (99/99)
       security: [{bearerAuth: []}]
       parameters:
         - {name: id, in: path, required: true, schema: {type: string, format: uuid}}
